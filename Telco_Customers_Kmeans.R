@@ -6,6 +6,9 @@
 # Purpose:    Demonstrate K-means clustering                                  #
 ###############################################################################
 
+
+#################### Section 1: Packages/Read Data ############################
+
 # Packages
 library(dplyr)
 
@@ -13,14 +16,19 @@ library(dplyr)
 data = read.csv("C:/Users/Matthew Landes/Documents/Matt/Kaggle/Telco_Customers/WA_Fn-UseC_-Telco-Customer-Churn.csv",
                 header = TRUE)
 
+###############################################################################
+
+#################### Section 2: Summarize Data/Remove Missing #################
 
 # Summary of data
 summary(data)
-names(data)
 
 # Filters out missing Total Charges
 data = data %>% filter(!is.na(data$TotalCharges))
 
+###############################################################################
+
+#################### Section 3: Category to Numeric Featues ###################
 
 # Encodes categorical feature as numeric
 data2 = matrix(nrow=nrow(data), ncol= 20)
@@ -99,9 +107,13 @@ for (i in 1:nrow(data)){
   if(data$Churn[i] == "No") {data2[i,20] = "green"} else {data2[i,20] = "red"}
 }
 
-
+# Changes the matrice into a dataframe
 data2 = as.data.frame(data2)
+
+# Adds labels from original dataset
 names(data2) = names(data)[2:21]
+
+# Changes classes from factors to numeric
 data2$gender = as.numeric(data2$gender)
 data2$SeniorCitizen = as.numeric(data2$SeniorCitizen)
 data2$Partner = as.numeric(data2$Partner)
@@ -121,6 +133,11 @@ data2$PaperlessBilling = as.numeric(data2$PaperlessBilling)
 data2$PaymentMethod = as.numeric(data2$PaymentMethod)
 data2$MonthlyCharges = as.numeric(data2$MonthlyCharges)
 data2$TotalCharges = as.numeric(data2$TotalCharges)
+
+###############################################################################
+
+
+#################### Section 4: Clustering ####################################
 
 # Two clusters without scaling 
 km2 = kmeans(data2[,1:19], 2)
@@ -148,3 +165,5 @@ table(km5$cluster, data$Churn)
 # Six clusters 
 km6 = kmeans(data3[,1:19], 6)
 table(km6$cluster, data$Churn)
+
+###############################################################################
